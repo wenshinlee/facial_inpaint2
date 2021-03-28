@@ -1,0 +1,170 @@
+# train or test options
+model_name: SPNet
+is_train: True
+
+# datasets path options
+gpu_ids:
+  - 0
+image_dir: /home/datasets/inpaint/celeba/Celeba-HQ-inpaint/images
+pconv_mask_dir: /home/datasets/inpaint/mask/test_mask/testing_mask_ratios/ratios_2
+segmap_mask_dir: /home/datasets/inpaint/celeba/Celeba-HQ-inpaint/labels
+checkpoints_dir: ./checkpoints
+#   0: 'background'	    1: 'skin'	      2: 'nose'
+#   3: 'eye_g'	        4: 'l_eye'	      5: 'r_eye'
+#   6: 'l_brow'	        7: 'r_brow'	      8: 'l_ear'
+#   9: 'r_ear'	        10: 'mouth'	      11: 'u_lip'
+#   12: 'l_lip'	        13: 'hair'	      14: 'hat'
+#   15: 'ear_r'	        16: 'neck_l'	  17: 'neck'
+#   18: 'cloth'
+n_label: 19
+
+# continue train options
+continue_train: False
+which_epoch: -1
+epoch_count: 1               # the starting epoch count
+total_iterations: 120
+
+# data options
+input_dim: 3                  # number of image channels
+mask_dim: 3                   # number of mask channels
+image_size: 256               # first resize the shortest image side to this size
+crop_image_height: 256        # random crop image of this height
+crop_image_width: 256         # random crop image of this width
+
+# dataset options
+dataset_name: CelebA_SPNet
+batch_size: 16
+num_workers: 1
+dilate_iter: 2
+p_generate_miss: 0.0
+shuffle_seed: 123
+max_miss_facial_names: 3      # must <= the length of tags name which status is TRUE
+
+# logger options
+image_save_iter: 10           # How often do you want to save output images during training
+snapshot_save_iter: 1         # How often do you want to save trained models
+log_iter: 10                  # How often do you want to log the training stats
+
+# optimization options
+init_type: kaiming           # network initialization [normal|xavier|kaiming|orthogonal]
+init_gain: 0.02              # scaling factor for normal, xavier and orthogonal
+niter: 20                    # # of iter at starting learning rate
+niter_decay: 100             # # of iter to linearly decay learning rate to zero
+lr_policy: lambda            # [lambda|step|plateau|cosine]
+lr_decay_iters: 50           # multiply by a gamma every lr_decay_iters iterations
+
+lr_gen: 0.0001
+lr_dis: 0.0001
+beta1: 0.5
+beta2: 0.999
+
+# style information and resnetSPADEBlock
+style_dim: 512
+spectral_norm: True           # ResnetSPADEBlock use spectral_norm or not
+
+NLayerDiscriminator:
+  # No normalization (Attribute-specific)
+  use_sigmoid: False
+  norm_layer: BatchNorm2d
+  use_spectral_norm: True
+  channels: [64, 128, 256, 512]
+MultiscaleDiscriminator:
+  output_nc: 1
+  multiscale: 3
+  get_inter_feat: False
+
+tags:
+  -
+    name: Skin
+    status: False
+    attributes:
+      -
+        name: 'Young'
+        filename: datasets/tag_txt/skin_Young.txt
+      -
+        name: 'Smiling'
+        filename: datasets/tag_txt/skin_Smiling.txt
+      -
+        name: 'Pale_Skin'
+        filename: datasets/tag_txt/skin_Pale_Skin.txt
+      -
+        name: 'Male'
+        filename: datasets/tag_txt/skin_Male.txt
+  -
+    name: Mouth
+    status: True
+    attributes:
+      -
+        name: 'Mouth_Slightly_Open'
+        filename: datasets/tag_txt/Mouth_Mouth_Slightly_Open.txt
+      -
+        name: 'Wearing_Lipstick'
+        filename: datasets/tag_txt/Mouth_Wearing_Lipstick.txt
+  -
+    name: HairColor
+    status: True
+    attributes:
+      -
+        name: 'Gray_Hair'
+        filename: datasets/tag_txt/HairColor_Gray_Hair.txt
+      -
+        name: 'Black_Hair'
+        filename: datasets/tag_txt/HairColor_Black_Hair.txt
+      -
+        name: 'Blond_Hair'
+        filename: datasets/tag_txt/HairColor_Blond_Hair.txt
+      -
+        name: 'Brown_Hair'
+        filename: datasets/tag_txt/HairColor_Brown_Hair.txt
+  -
+    name: HairType
+    status: False
+    attributes:
+      -
+        name: 'Wavy_Hair'
+        filename: datasets/tag_txt/HairType_Wavy_Hair.txt
+      -
+        name: 'Straight_Hair'
+        filename: datasets/tag_txt/HairType_Straight_Hair.txt
+      -
+        name: 'Bangs'
+        filename: datasets/tag_txt/HairType_Bangs.txt
+  -
+    name: Nose
+    status: True
+    attributes:
+      -
+        name: 'Pointy_Nose'
+        filename: datasets/tag_txt/Nose_Pointy_Nose.txt
+      -
+        name: 'Big_Nose'
+        filename: datasets/tag_txt/Nose_Big_Nose.txt
+      -
+        name: 'other'
+        filename: datasets/tag_txt/Nose_other.txt
+  -
+    name: Brow
+    status: True
+    attributes:
+      -
+        name: 'Arched_Eyebrows'
+        filename: datasets/tag_txt/Brow_Arched_Eyebrows.txt
+      -
+        name: 'Bushy_Eyebrows'
+        filename: datasets/tag_txt/Brow_Arched_Eyebrows.txt
+      -
+        name: 'other'
+        filename: datasets/tag_txt/Brow_other.txt
+  -
+    name: Eye
+    status: True
+    attributes:
+      -
+        name: 'Arched_Eyebrows'
+        filename: datasets/tag_txt/eye_Arched_Eyebrows.txt
+      -
+        name: 'Narrow_Eyes'
+        filename: datasets/tag_txt/eye_Narrow_Eyes.txt
+      -
+        name: 'other'
+        filename: datasets/tag_txt/eye_other.txt

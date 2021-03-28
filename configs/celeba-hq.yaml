@@ -1,0 +1,233 @@
+# experiment name
+model_name: Facial_inpaint
+
+# status options: train or test([2000:] is train, other is test)
+is_train: True                    # train or tes
+continue_train: False             # continue train just for train
+which_epoch: -1                   # which epoch load for continue train or test
+epoch_count: 1                    # the starting epoch count
+
+# GPU options
+gpu_ids:
+  - 0
+
+# file path options
+image_dir: /home/datasets/inpaint/celeba/Celeba-HQ-inpaint/images
+segmap_dir: /home/datasets/inpaint/celeba/Celeba-HQ-inpaint/labels
+pconv_mask_dir: /home/datasets/inpaint/mask/test_mask/testing_mask_ratios/ratios_2
+# facial segmap region mask dir
+facial_region_mask_dir: /home/datasets/inpaint/celeba/Celeba-HQ-inpaint/labels
+
+# visuals and model save path options
+checkpoints_dir: ./checkpoints
+output_dir: ./output
+
+# the number of train semantic_net
+num_train_semantic_net: 4         # the number of train semantic_net
+
+# data input options
+input_dim: 3                      # number of image channels
+mask_dim: 3                       # number of mask channels
+image_size: 256                   # first resize the shortest image side to this size
+crop_image_height: 256            # random crop image of this height
+crop_image_width: 256             # random crop image of this width
+edge_mode: 0                      # 0 is load image edge, 1 is load zero Ndarray
+num_semantic_label: 19            # the number of semantic region, Should be equal to the number of
+                                  # real states under the label
+
+# dataloader options
+dataset_name: CelebA_SPNet        # which dataset will be select
+batch_size: 4                     # batch size
+num_workers: 4                    # The number of workers for load datasets
+dilate_iter: 2                    # The number of further dilate in the mask
+shuffle_seed: 123                 # random seed for data set partition, random shuffle, [2000:] is train, other is test
+p_generate_miss: 0.0              # the probability of using randomly generated mask
+num_max_miss_facial_names: 3      # must <= the length of tags name which status is TRUE
+facial_semantic_region_names:     # support facial semantic region names only for facial region miss
+  - eye
+  - brow
+  - nose
+  - skin
+  - mouth
+  - hair
+
+# logger options
+display_freq: 100          # How often do you want to save output images during training
+save_epoch_freq: 1         # How often do you want to save trained models
+print_freq: 100                 # How often do you want to log the training stats
+
+# optimization options
+init_type: kaiming           # network initialization [normal|xavier|kaiming|orthogonal]
+init_gain: 0.02              # scaling factor for normal, xavier and orthogonal
+niter: 20                    # # of iter at starting learning rate
+niter_decay: 100             # # of iter to linearly decay learning rate to zero
+total_iterations: 120        # total iterations (niter + niter_decay)
+lr_policy: lambda            # [lambda|step|plateau|cosine]
+lr_decay_iters: 50           # multiply by a gamma every lr_decay_iters iterations
+
+lr_gen: 0.0001               # inpaint_gen and semantic_gan lr
+lr_dis: 0.0004               # inpaint_dis and semantic_dis lr
+beta1: 0.5                   # Adam betas
+beta2: 0.999                 # Adam betas
+
+# style information and resnetSPADEBlock
+style_dim: 512                # style code dim
+spectral_norm: True           # ResnetSPADEBlock use spectral_norm or not
+
+# network parameter
+encoder:
+  share_channels: [64, 128, 256]
+  middle_channels: [256, 512]
+
+extractors_gen:
+  channels: [256, 512, 512, 512, 512]
+
+decoder:
+  channels: [512, 256, 128, 64]
+
+NLayerDis:
+  use_sigmoid: False
+  norm_layer: BatchNorm2d
+  use_spectral_norm: True
+  channels: [64, 128, 256, 512]
+
+MultiscaleDis:
+  output_nc: 1
+  multiscale: 3
+  get_inter_feat: False
+
+tags:
+  # https://github.com/wenshinlee/CelebAMask-HQ/tree/master/face_parsing
+  -
+    name: background
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: skin
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: nose
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: eye_g
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: l_eye
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: r_eye
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: l_brow
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: r_brow
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: l_ear
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: r_ear
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: mouth
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: u_lip
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: l_lip
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: hair
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: hat
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: ear_r
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: neck_l
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: neck
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
+  -
+    name: cloth
+    status: True
+    attributes:
+      -
+        name: 'None'
+        filename: datasets/attributes_txt/None.txt
