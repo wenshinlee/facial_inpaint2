@@ -23,7 +23,7 @@ checkpoints_dir: ./checkpoints
 output_dir: ./output
 
 # the number of train semantic_net
-num_train_semantic_net: 4         # the number of train semantic_net
+num_train_semantic_net: 8         # the number of train semantic_net
 
 # data input options
 input_dim: 3                      # number of image channels

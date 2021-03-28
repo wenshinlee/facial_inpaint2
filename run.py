@@ -7,23 +7,6 @@ import core.utils as utils
 from datasets.dataset import get_dataloader
 from core.facial_inpaint import FacialInpaint
 
-
-def get_train_parameter(hyperparameters):
-    epoch_count = hyperparameters['epoch_count']
-    niter = hyperparameters['niter']
-    niter_decay = hyperparameters['niter_decay']
-    batch_size = hyperparameters['batch_size']
-    display_freq = hyperparameters['image_save_iter']
-    print_freq = hyperparameters['log_iter']
-    save_epoch_freq = hyperparameters['snapshot_save_iter']
-    checkpoints_dir = hyperparameters['checkpoints_dir']
-    model_name = hyperparameters['model_name']
-    num_train_SegExtNet = hyperparameters['num_train_SegExtNet']
-    is_train = hyperparameters['is_train']
-    return epoch_count, niter, niter_decay, batch_size, display_freq, print_freq, \
-           save_epoch_freq, checkpoints_dir, model_name, num_train_SegExtNet, is_train
-
-
 if __name__ == '__main__':
     hy_config = utils.get_config('./configs/celeba-hq.yaml')
     batch_size = hy_config['batch_size']

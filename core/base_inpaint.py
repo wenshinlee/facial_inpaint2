@@ -169,20 +169,22 @@ class BaseInpaint(torch.nn.Module, ABC):
     def update_learning_rate(self):
         for scheduler in self.schedulers:
             scheduler.step()
-        lr = self.optimizers[0].param_groups[0]['lr']
-        print('learning rate = %.7f' % lr)
+        for i, optimizers in enumerate(self.optimizers):
+            lr = optimizers.param_groups[0]['lr']
+            print('optimizers_% learning rate = %.7f' % (i, lr))
 
     def get_scheduler(self, optimizer):
         if self.lr_policy == 'lambda':
             def lambda_rule(epoch):
                 lr_l = 1.0 - max(0, epoch + 1 + self.epoch_count - self.niter) / float(self.niter_decay + 1)
                 return lr_l
+
             scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule)
         elif self.lr_policy == 'step':
             scheduler = lr_scheduler.StepLR(optimizer, step_size=self.lr_decay_iters, gamma=0.1)
         elif self.lr_policy == 'plateau':
             scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.2, threshold=0.01,
-                                                            patience=5)
+                                                       patience=5)
         elif self.lr_policy == 'cosine':
             scheduler = lr_scheduler.CosineAnnealingLR(optimizer, T_max=self.niter, eta_min=0)
         else:
