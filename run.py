@@ -51,11 +51,11 @@ if __name__ == '__main__':
                     for key, value in errors.items():
                         if epoch <= model.num_train_semantic_net:
                             symbol = '<='
-                            visuals.add_scalar('dis(epoch {} {})/{}'.format(symbol, model.num_train_semantic_net, key),
+                            visuals.add_scalar('(epoch {} {})/{}'.format(symbol, model.num_train_semantic_net, key),
                                                value, total_steps + 1)
                         else:
                             symbol = '>'
-                            visuals.add_scalar('dis(epoch {} {})/{}'.format(symbol, model.num_train_semantic_net, key),
+                            visuals.add_scalar('(epoch {} {})/{}'.format(symbol, model.num_train_semantic_net, key),
                                                value, total_steps + 1)
 
                     print('iteration time: %f' % t)

@@ -171,7 +171,7 @@ class BaseInpaint(torch.nn.Module, ABC):
             scheduler.step()
         for i, optimizers in enumerate(self.optimizers):
             lr = optimizers.param_groups[0]['lr']
-            print('optimizers_% learning rate = %.7f' % (i, lr))
+            print('optimizers_{} learning rate = {}'.format(str(i), str(lr)))
 
     def get_scheduler(self, optimizer):
         if self.lr_policy == 'lambda':
