@@ -7,7 +7,13 @@ import core.utils as utils
 from datasets.dataset import get_dataloader
 from core.facial_inpaint import FacialInpaint
 
+from torch.backends import cudnn
+
+
 if __name__ == '__main__':
+    # For fast training
+    cudnn.benchmark = True
+
     hy_config = utils.get_config('./configs/celeba-hq.yaml')
     batch_size = hy_config['batch_size']
 
