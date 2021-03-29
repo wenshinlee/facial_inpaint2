@@ -16,7 +16,7 @@ image_dir: /home/datasets/inpaint/celeba/Celeba-HQ-inpaint/images
 segmap_dir: /home/datasets/inpaint/celeba/Celeba-HQ-inpaint/labels
 pconv_mask_dir: /home/datasets/inpaint/mask/test_mask/testing_mask_ratios/ratios_2
 # facial segmap region mask dir
-facial_region_mask_dir: /home/datasets/inpaint/celeba/Celeba-HQ-inpaint/labels
+facial_region_mask_dir: /home/datasets/inpaint/celeba/Celeba-HQ-inpaint/mask
 
 # visuals and model save path options
 checkpoints_dir: ./checkpoints
