@@ -31,10 +31,19 @@ if __name__ == '__main__':
         visuals = utils.TensorboardVisuals(model.checkpoints_dir, model.experiment_name)
         total_steps = 0
         for epoch in range(model.epoch_count, model.niter + model.niter_decay + 1):
+            epoch_iter = 0
+            epoch_start_time = time.time()
+
+            # Judge whether the current epoch is joint training.
+            # If it is joint training, update total_steps number is 0, which is used for index of tensorboard.
+            if epoch > model.num_train_semantic_net and is_clear_total_steps:
+                total_steps = 0
+                is_clear_total_steps = False
+
+            # update model learning rate
             model.update_learning_rate()
 
-            epoch_start_time = time.time()
-            epoch_iter = 0
+            # training
             for n_iter, data in tqdm.tqdm(enumerate(data_loader, 0), total=len(data_loader),
                                           desc="epoch-->%d" % epoch, ncols=80, leave=False):
                 iter_start_time = time.time()
@@ -71,15 +80,13 @@ if __name__ == '__main__':
                     grid = torchvision.utils.make_grid(image, nrow=input_image.shape[0])
 
                     if epoch > model.num_train_semantic_net:
-                        visuals.add_image('Epoch>15/Epoch_(%d)_(%d)' % (epoch, epoch_iter + 1),
+                        visuals.add_image('Epoch>(%d)/Epoch_(%d)_(%d)' % (model.num_train_semantic_net,
+                                                                          epoch, epoch_iter + 1),
                                           grid, total_steps + 1)
                     else:
-                        visuals.add_image('Epoch<=15/Epoch_(%d)_(%d)' % (epoch, epoch_iter + 1),
+                        visuals.add_image('Epoch<=(%d)/Epoch_(%d)_(%d)' % (model.num_train_semantic_net,
+                                                                           epoch, epoch_iter + 1),
                                           grid, total_steps + 1)
-
-            if epoch > model.num_train_semantic_net and is_clear_total_steps:
-                total_steps = 0
-                is_clear_total_steps = False
 
             if epoch % model.save_epoch_freq == 0:
                 print('saving the model at the end of epoch %d, iters %d' %
